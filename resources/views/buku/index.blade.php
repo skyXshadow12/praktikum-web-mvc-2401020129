@@ -6,29 +6,34 @@
 </head>
 <body>
     <h1>Daftar Buku</h1>
-    <p>Praktikum Pemrograman Web - 2401020129</p>
+    <p><a href="{{ route('buku.create') }}">Tambah Buku</a></p>
 
-    <form method="GET" action="{{ url('/buku') }}">
-        <p>Cari judul: <input name="cari" value="{{ $cari }}"> <button type="submit">Cari</button></p>
-    </form>
+    @if (session('status'))
+        <p>{{ session('status') }}</p>
+    @endif
 
     <table border="1" cellpadding="6" cellspacing="0">
         <tr>
             <th>Kode</th>
             <th>Judul</th>
-            <th>Detail</th>
+            <th>Kategori</th>
+            <th>Aksi</th>
         </tr>
-        @foreach ($buku as $item)
+        @foreach ($bukus as $buku)
         <tr>
-            <td>{{ $item['kode'] }}</td>
-            <td>{{ $item['judul'] }}</td>
-            <td><a href="{{ url('/buku/'.$item['kode']) }}">Lihat</a></td>
+            <td>{{ $buku->kode }}</td>
+            <td>{{ $buku->judul }}</td>
+            <td>{{ $buku->kategori->nama }}</td>
+            <td>
+                <a href="{{ route('buku.edit', $buku) }}">Ubah</a>
+                <form action="{{ route('buku.destroy', $buku) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit">Hapus</button>
+                </form>
+            </td>
         </tr>
         @endforeach
     </table>
-
-    @if (count($buku) === 0)
-        <p>Data buku tidak ditemukan.</p>
-    @endif
 </body>
 </html>
